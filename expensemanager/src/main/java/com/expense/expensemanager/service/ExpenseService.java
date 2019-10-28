@@ -18,6 +18,7 @@ import com.expense.expensemanager.payload.ExpenseRequest;
 import com.expense.expensemanager.repository.CategoriesRepository;
 import com.expense.expensemanager.repository.TransactionRepository;
 import com.expense.expensemanager.repository.UserRepository;
+import com.expense.expensemanager.security.UserPrincipal;
 
 @Service
 public class ExpenseService {
@@ -35,7 +36,7 @@ public class ExpenseService {
 		Transaction transaction = new Transaction();
 		transaction.setCdDiv(expenseRequest.getCdDiv());
 		try {
-			transaction.setDateOfTransaction(new SimpleDateFormat("dd/MM/yyyy").parse(expenseRequest.getDateOfTransaction()));
+			transaction.setDateOfTransaction(new SimpleDateFormat("dd/MM/yyyy").parse(expenseRequest.getTransactionDate()));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			throw new BadRequestException("Please Enter the Proper date");
@@ -56,7 +57,13 @@ public class ExpenseService {
 
 	private User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return userRepository.findByUsernameOrEmail(auth.getName(),auth.getName()).get();
+		UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+		return userRepository.findById(userPrincipal.getId()).get();
+	}
+
+	public void getExpenses() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 public class ExpenseRequest {
 	
 	@NotBlank
-	private String dateOfTransaction;
+	private String transactionDate;
 	
 	@NotNull
 	private Double transactionAmount;
@@ -26,12 +26,12 @@ public class ExpenseRequest {
 	
 	private String notes;
 	
-	public String getDateOfTransaction() {
-		return dateOfTransaction;
+	public String getTransactionDate() {
+		return transactionDate;
 	}
 
-	public void setDateOfTransaction(String dateOfTransaction) {
-		this.dateOfTransaction = dateOfTransaction;
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
 	}
 
 	public Double getTransactionAmount() {
