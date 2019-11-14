@@ -14,5 +14,5 @@ import com.expense.expensemanager.model.Transaction;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 	Optional<Transaction>  findBytransactionid(Long transactionId);
 
-	List<Transaction> findByUserId(Long id);
+	Page<Transaction> findByUserId(Long id, Pageable pageable);
 }

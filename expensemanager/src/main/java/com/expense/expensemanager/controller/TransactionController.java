@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.expense.expensemanager.model.Transaction;
 import com.expense.expensemanager.payload.ApiResponse;
 import com.expense.expensemanager.payload.ExpenseRequest;
+import com.expense.expensemanager.payload.ExpenseResponse;
+import com.expense.expensemanager.payload.PagedResponse;
 import com.expense.expensemanager.repository.TransactionRepository;
 import com.expense.expensemanager.security.CurrentUser;
 import com.expense.expensemanager.security.UserPrincipal;
@@ -41,9 +43,7 @@ public class TransactionController {
 	}
 	
 	@PostMapping("/getExpenses")
-	public List<Transaction> getExpenses(@CurrentUser UserPrincipal currentUser){
-		List<Transaction> a = transactionRepository.findByUserId(currentUser.getId());
-		System.out.println(a);
-		return a;
+	public PagedResponse<ExpenseResponse> getExpenses(@CurrentUser UserPrincipal currentUser){
+		return expenseService.getExpenses(currentUser);
 	}
 }

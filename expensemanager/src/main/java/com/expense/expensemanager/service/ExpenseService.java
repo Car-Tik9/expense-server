@@ -2,11 +2,18 @@ package com.expense.expensemanager.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.expense.expensemanager.enumfiles.CategoriesEnum;
 import com.expense.expensemanager.enumfiles.TransactionMode;
@@ -15,10 +22,13 @@ import com.expense.expensemanager.model.Categories;
 import com.expense.expensemanager.model.Transaction;
 import com.expense.expensemanager.model.User;
 import com.expense.expensemanager.payload.ExpenseRequest;
+import com.expense.expensemanager.payload.ExpenseResponse;
+import com.expense.expensemanager.payload.PagedResponse;
 import com.expense.expensemanager.repository.CategoriesRepository;
 import com.expense.expensemanager.repository.TransactionRepository;
 import com.expense.expensemanager.repository.UserRepository;
 import com.expense.expensemanager.security.UserPrincipal;
+import com.expense.expensemanager.utils.ModelMapper;
 
 @Service
 public class ExpenseService {
@@ -57,13 +67,23 @@ public class ExpenseService {
 
 	private User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+		UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal(); 
 		return userRepository.findById(userPrincipal.getId()).get();
 	}
 
-	public void getExpenses() {
-		// TODO Auto-generated method stub
-		
+	public PagedResponse<ExpenseResponse> getExpenses(UserPrincipal currentUser) {
+		Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC,"dateOfTransaction");
+		Page<Transaction> expenses = transactionRepository.findByUserId(currentUser.getId(),pageable);
+		if ( expenses.getNumberOfElements() == 0) {
+			return new PagedResponse<>(Collections.EMPTY_LIST,expenses.getNumber(),expenses.getSize(),expenses.getTotalElements(),
+					expenses.getTotalPages(),expenses.isLast());
+		}
+		List<ExpenseResponse> expenseResponse = expenses.map(converter -> {
+			return ModelMapper.mapTransactionToExpense(converter);
+		}).getContent();
+		return new PagedResponse<>(expenseResponse, expenses.getNumber(), 
+				expenses.getSize(), 
+				expenses.getNumberOfElements(), expenses.getTotalPages(), expenses.isLast());
 	}
 
 }
