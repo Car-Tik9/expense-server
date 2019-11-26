@@ -71,8 +71,8 @@ public class ExpenseService {
 		return userRepository.findById(userPrincipal.getId()).get();
 	}
 
-	public PagedResponse<ExpenseResponse> getExpenses(UserPrincipal currentUser) {
-		Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC,"dateOfTransaction");
+	public PagedResponse<ExpenseResponse> getExpenses(UserPrincipal currentUser, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC,"dateOfTransaction");
 		Page<Transaction> expenses = transactionRepository.findByUserId(currentUser.getId(),pageable);
 		if ( expenses.getNumberOfElements() == 0) {
 			return new PagedResponse<>(Collections.EMPTY_LIST,expenses.getNumber(),expenses.getSize(),expenses.getTotalElements(),
@@ -83,7 +83,7 @@ public class ExpenseService {
 		}).getContent();
 		return new PagedResponse<>(expenseResponse, expenses.getNumber(), 
 				expenses.getSize(), 
-				expenses.getNumberOfElements(), expenses.getTotalPages(), expenses.isLast());
+				expenses.getTotalElements(), expenses.getTotalPages(), expenses.isLast());
 	}
 
 }

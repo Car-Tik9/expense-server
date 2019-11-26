@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,12 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expense.expensemanager.model.Transaction;
 import com.expense.expensemanager.payload.ApiResponse;
 import com.expense.expensemanager.payload.ExpenseRequest;
 import com.expense.expensemanager.payload.ExpenseResponse;
+import com.expense.expensemanager.payload.PagedRequest;
 import com.expense.expensemanager.payload.PagedResponse;
 import com.expense.expensemanager.repository.TransactionRepository;
 import com.expense.expensemanager.security.CurrentUser;
@@ -43,7 +46,7 @@ public class TransactionController {
 	}
 	
 	@PostMapping("/getExpenses")
-	public PagedResponse<ExpenseResponse> getExpenses(@CurrentUser UserPrincipal currentUser){
-		return expenseService.getExpenses(currentUser);
+	public PagedResponse<ExpenseResponse> getExpenses(@CurrentUser UserPrincipal currentUser , @RequestBody PagedRequest pagedRequest){
+		return expenseService.getExpenses(currentUser,pagedRequest.getPage(),pagedRequest.getSize());
 	}
 }
