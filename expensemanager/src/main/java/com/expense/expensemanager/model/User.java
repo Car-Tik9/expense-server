@@ -45,6 +45,10 @@ public class User extends DateAudit {
     @NotBlank
     @Size(max = 100)
     private String password;
+    
+    private String filePath;
+    
+    private String fileName;
 
     public User() {
 
@@ -96,4 +100,20 @@ public class User extends DateAudit {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 }

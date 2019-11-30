@@ -21,7 +21,6 @@ import com.expense.expensemanager.security.JwtAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired

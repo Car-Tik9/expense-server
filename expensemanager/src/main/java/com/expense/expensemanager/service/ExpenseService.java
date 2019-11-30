@@ -1,11 +1,14 @@
 package com.expense.expensemanager.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.expense.expensemanager.enumfiles.CategoriesEnum;
 import com.expense.expensemanager.enumfiles.TransactionMode;
@@ -41,6 +46,9 @@ public class ExpenseService {
 	
 	@Autowired
 	CategoriesRepository categoriesRepository;
+	
+	@Value("${files.profilepicpath}")
+	private String fileUploadPath;
 	
 	public void createExpense(ExpenseRequest expenseRequest) {
 		Transaction transaction = new Transaction();
@@ -85,5 +93,24 @@ public class ExpenseService {
 				expenses.getSize(), 
 				expenses.getTotalElements(), expenses.getTotalPages(), expenses.isLast());
 	}
-
+	
+	
+	public void saveProfilePicture(MultipartFile profilePic) throws IllegalStateException, IOException {
+		User user = getCurrentUser();
+		String filePath = "";
+		File file = new File(fileUploadPath);
+		if(!file.exists()) {
+			file.mkdir();
+		}
+		if (file != null) {
+			if (!profilePic.getOriginalFilename().equals("")) {
+				filePath = fileUploadPath+File.separator+user.getId()+"_"+profilePic.getOriginalFilename();
+				profilePic.transferTo(new File(filePath));
+				user.setFileName(profilePic.getOriginalFilename());
+				user.setFilePath(filePath);
+				userRepository.save(user);
+			}
+		}
+		
+	}
 }
