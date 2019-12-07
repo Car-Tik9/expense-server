@@ -95,7 +95,7 @@ public class ExpenseService {
 	}
 	
 	
-	public void saveProfilePicture(MultipartFile profilePic) throws IllegalStateException, IOException {
+	public String saveProfilePicture(MultipartFile profilePic) throws IllegalStateException, IOException {
 		User user = getCurrentUser();
 		String filePath = "";
 		File file = new File(fileUploadPath);
@@ -111,6 +111,6 @@ public class ExpenseService {
 				userRepository.save(user);
 			}
 		}
-		
+		return filePath;
 	}
 }

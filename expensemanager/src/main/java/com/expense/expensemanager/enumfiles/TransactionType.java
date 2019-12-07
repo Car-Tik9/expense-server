@@ -10,7 +10,7 @@ public enum TransactionType {
 		this.creditDebitDiv  = creditDebitDiv;
 	}
 	
-	public static TransactionType fromDebitdiv(int value) {
+	public static TransactionType fromDebitdiv(int value) throws Exception {
 		for(TransactionType transactionType : TransactionType.values()) {
 			if(value == transactionType.creditDebitDiv) {
 				return transactionType;

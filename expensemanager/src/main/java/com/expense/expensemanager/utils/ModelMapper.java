@@ -28,11 +28,7 @@ public class ModelMapper {
 		UserProfile userProfile = new UserProfile();
 		userProfile.setEmailId(user.getEmail());
 		userProfile.setName(user.getName());
-		String fileLoaction = ServletUriComponentsBuilder.fromCurrentContextPath()
-		.path("/images/{filename}")
-		.buildAndExpand(FilenameUtils
-				.getName(user.getFilePath())).toUriString();
-		userProfile.setImageUrl(fileLoaction);
+		userProfile.setImageUrl(ExpenseUtils.formProfilePictureURL(user.getFilePath()));
 		userProfile.setImageAltText(user.getFileName());
 		return userProfile;
 	}

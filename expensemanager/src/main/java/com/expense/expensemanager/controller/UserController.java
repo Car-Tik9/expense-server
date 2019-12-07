@@ -14,11 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.expense.expensemanager.model.User;
 import com.expense.expensemanager.payload.ApiResponse;
+import com.expense.expensemanager.payload.FileUploadResponse;
 import com.expense.expensemanager.payload.UserProfile;
 import com.expense.expensemanager.repository.UserRepository;
 import com.expense.expensemanager.security.CurrentUser;
 import com.expense.expensemanager.security.UserPrincipal;
 import com.expense.expensemanager.service.ExpenseService;
+import com.expense.expensemanager.utils.ExpenseUtils;
 import com.expense.expensemanager.utils.ModelMapper;
 @RestController
 @RequestMapping("/expense/user")
@@ -42,7 +44,7 @@ public class UserController {
 	
 	@PostMapping(value="/uploadProfilePicture",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
-		expenseService.saveProfilePicture(file);
-		return ResponseEntity.ok(new ApiResponse(true, "Profile Picture Uploaded sucessfully"));
+		String filePath = expenseService.saveProfilePicture(file);
+		return ResponseEntity.ok(new FileUploadResponse(true, "Profile Picture Uploaded sucessfully",ExpenseUtils.formProfilePictureURL(filePath)));
 	}
-}
+} 
