@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ import com.expense.expensemanager.repository.CategoriesRepository;
 import com.expense.expensemanager.repository.TransactionRepository;
 import com.expense.expensemanager.repository.UserRepository;
 import com.expense.expensemanager.security.UserPrincipal;
+import com.expense.expensemanager.specification.TransactionSpecification;
 import com.expense.expensemanager.utils.ModelMapper;
 
 @Service
@@ -79,9 +82,13 @@ public class ExpenseService {
 		return userRepository.findById(userPrincipal.getId()).get();
 	}
 
-	public PagedResponse<ExpenseResponse> getExpenses(UserPrincipal currentUser, int page, int size) {
+	public PagedResponse<ExpenseResponse> getExpenses(UserPrincipal currentUser, int page, int size, Map<String,Object> filterDataMap) {
+		
+		Specification<Transaction> transactionSpecification = new TransactionSpecification(filterDataMap);
+		
 		Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC,"dateOfTransaction");
-		Page<Transaction> expenses = transactionRepository.findByUserId(currentUser.getId(),pageable);
+		//Page<Transaction> expenses = transactionRepository.findByUserId(transactionSpecification,currentUser.getId(),pageable);
+		Page<Transaction> expenses = transactionRepository.findAll(transactionSpecification,pageable);
 		if ( expenses.getNumberOfElements() == 0) {
 			return new PagedResponse<>(Collections.EMPTY_LIST,expenses.getNumber(),expenses.getSize(),expenses.getTotalElements(),
 					expenses.getTotalPages(),expenses.isLast());

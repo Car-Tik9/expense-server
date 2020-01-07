@@ -47,6 +47,6 @@ public class TransactionController {
 	
 	@PostMapping("/getExpenses")
 	public PagedResponse<ExpenseResponse> getExpenses(@CurrentUser UserPrincipal currentUser , @RequestBody PagedRequest pagedRequest){
-		return expenseService.getExpenses(currentUser,pagedRequest.getPage(),pagedRequest.getSize());
+		return expenseService.getExpenses(currentUser,pagedRequest.getPage(),pagedRequest.getSize(), pagedRequest.getFilterData());
 	}
 }
