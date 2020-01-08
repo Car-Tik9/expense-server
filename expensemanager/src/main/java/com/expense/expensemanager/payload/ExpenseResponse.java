@@ -21,7 +21,7 @@ public class ExpenseResponse {
 	
 	private String mode;
 
-	
+	private int cdDiv;
 
 	public long getTransactionId() {
 		return transactionId;
@@ -77,6 +77,14 @@ public class ExpenseResponse {
 
 	public void setMode(String mode) {
 		this.mode = mode;
+	}
+
+	public int getCdDiv() {
+		return cdDiv;
+	}
+
+	public void setCdDiv(int i) {
+		this.cdDiv = i;
 	}
 	
 } 

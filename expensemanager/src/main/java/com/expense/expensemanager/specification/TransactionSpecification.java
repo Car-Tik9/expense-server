@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -16,6 +17,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
+import com.expense.expensemanager.model.Categories;
 import com.expense.expensemanager.model.Transaction;
 
 public class TransactionSpecification implements Specification<Transaction> {
@@ -47,10 +49,16 @@ public class TransactionSpecification implements Specification<Transaction> {
 		if(filterDataMap.containsKey("categoryTypeList")) {
 			List<String> categoryTypeList = (List<String>) filterDataMap.get("categoryTypeList");
 			if(!categoryTypeList.isEmpty()) {
-				predicates.add(root.get("transactionMode").in(categoryTypeList));
+				Join<Transaction, Categories> join = root.join("categories");
+				predicates.add(join.get("categoryName").in(categoryTypeList));
 			}
 		}
-		
+		if(filterDataMap.containsKey("cdList")) {
+			List<String> creditDebitList = (List<String>) filterDataMap.get("cdList");
+			if(!creditDebitList.isEmpty()) {
+				predicates.add(root.get("cdDiv").in(creditDebitList));
+			}
+		}
 		return andTogether(predicates, criteriaBuilder);
 	}
 	

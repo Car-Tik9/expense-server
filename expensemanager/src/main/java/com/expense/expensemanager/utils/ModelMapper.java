@@ -20,6 +20,7 @@ public class ModelMapper {
 		expenseResponse.setMode(transaction.getTransactionMode());
 		expenseResponse.setNotes(transaction.getNotes());
 		expenseResponse.setCategory(transaction.getCategories().getCategoryName());
+		expenseResponse.setCdDiv(transaction.getCdDiv());
 		return expenseResponse;
 	}
 	
